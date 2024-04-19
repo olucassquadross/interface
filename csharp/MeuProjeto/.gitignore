@@ -1,0 +1,20 @@
+# Ignorar arquivos de compilação e pacotes
+bin/
+obj/
+
+# Ignorar arquivos de configuração do Visual Studio
+.vs/
+
+# Ignorar arquivos de configuração do Rider (IDE da JetBrains)
+.idea/
+
+# Ignorar arquivos de configuração do Visual Studio Code
+.vscode/
+
+# Ignorar arquivos de usuário do Visual Studio
+*.user
+*.suo
+*.cache
+
+# Ignorar o arquivo de configuração do .NET
+*.dotnet
