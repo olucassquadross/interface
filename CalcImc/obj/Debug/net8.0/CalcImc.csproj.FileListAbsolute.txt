@@ -1,0 +1,15 @@
+C:\Users\Daniel\CalcImc\bin\Debug\net8.0\CalcImc.exe
+C:\Users\Daniel\CalcImc\bin\Debug\net8.0\CalcImc.deps.json
+C:\Users\Daniel\CalcImc\bin\Debug\net8.0\CalcImc.runtimeconfig.json
+C:\Users\Daniel\CalcImc\bin\Debug\net8.0\CalcImc.dll
+C:\Users\Daniel\CalcImc\bin\Debug\net8.0\CalcImc.pdb
+C:\Users\Daniel\CalcImc\obj\Debug\net8.0\CalcImc.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Daniel\CalcImc\obj\Debug\net8.0\CalcImc.AssemblyInfoInputs.cache
+C:\Users\Daniel\CalcImc\obj\Debug\net8.0\CalcImc.AssemblyInfo.cs
+C:\Users\Daniel\CalcImc\obj\Debug\net8.0\CalcImc.csproj.CoreCompileInputs.cache
+C:\Users\Daniel\CalcImc\obj\Debug\net8.0\CalcImc.sourcelink.json
+C:\Users\Daniel\CalcImc\obj\Debug\net8.0\CalcImc.dll
+C:\Users\Daniel\CalcImc\obj\Debug\net8.0\refint\CalcImc.dll
+C:\Users\Daniel\CalcImc\obj\Debug\net8.0\CalcImc.pdb
+C:\Users\Daniel\CalcImc\obj\Debug\net8.0\CalcImc.genruntimeconfig.cache
+C:\Users\Daniel\CalcImc\obj\Debug\net8.0\ref\CalcImc.dll

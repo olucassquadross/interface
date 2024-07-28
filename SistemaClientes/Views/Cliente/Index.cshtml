@@ -1,0 +1,44 @@
+﻿@model IEnumerable<SistemaClientes.Models.Cliente>
+
+@{
+    ViewData["Title"] = "Clientes";
+}
+
+<h2>Clientes</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Adicionar Novo Cliente</a>
+</p>
+
+@if (Model != null && Model.Any())
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.ID_Cliente)</th>
+                <th>@Html.DisplayNameFor(model => model.Nome)</th>
+                <th>@Html.DisplayNameFor(model => model.Email)</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.ID_Cliente)</td>
+                <td>@Html.DisplayFor(modelItem => item.Nome)</td>
+                <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.ID_Cliente" class="btn btn-secondary">Editar</a> |
+                    <a asp-action="Details" asp-route-id="@item.ID_Cliente" class="btn btn-info">Detalhes</a> |
+                    <a asp-action="Delete" asp-route-id="@item.ID_Cliente" class="btn btn-danger">Excluir</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Não há clientes cadastrados.</p>
+}
