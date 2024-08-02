@@ -81,92 +81,93 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                 }
             }
 
-            private function generate_boleto( $order ) {
-                $order_data = $order->get_data();
-                $customer_data = $order->get_address();
-                $total = $order->get_total();
+private function generate_boleto( $order ) {
+    $order_data = $order->get_data();
+    $customer_data = $order->get_address();
+    $total = $order->get_total();
 
-                $cpf = get_post_meta( $order->get_id(), '_billing_cpf', true );
-                $birthdate = get_post_meta( $order->get_id(), '_billing_birthdate', true );
+    $cpf = get_post_meta( $order->get_id(), '_billing_cpf', true );
+    $birthdate = get_post_meta( $order->get_id(), '_billing_birthdate', true );
 
-                $payload = array(
-                    'documento_emissor' => '54349169000180',
-                    'valor_em_centavos' => $total * 100,
-                    'vencimento' => date('Y-m-d', strtotime('+7 days')),
-                    'cliente' => array(
-                        'documento' => $cpf,
-                        'nome_cliente' => $order_data['billing']['first_name'] . ' ' . $order_data['billing']['last_name'],
-                        'email' => $order_data['billing']['email'],
-                        'celular' => $order_data['billing']['phone'],
-                        'data_nascimento' => $birthdate,
-                        'cep' => $customer_data['postcode'],
-                        'uf' => $customer_data['state'],
-                        'cidade' => $customer_data['city'],
-                        'endereco' => $customer_data['address_1'],
-                        'bairro' => $customer_data['address_2'],
-                        'numero' => 'N/A',
-                        'complemento' => ''
-                    ),
-                    'descricao' => 'Descrição da cobrança',
-                    'reference_id' => $order->get_order_key(),
-                    'url_logo' => 'https://zazpay.conectar.site/whitelabels/zaz/identidade_visual/logos/logo_principal.png',
-                    'percentual_juros' => 2.00,
-                    'percentual_multa' => 1.00,
-                    'split' => array(
-                        array(
-                            'documento' => '17968083000100',
-                            'valor_em_centavos' => 280
-                        )
-                    ),
-                    'desconto' => array(
-                        'tipo_desconto' => 'V',
-                        'itens' => array(
-                            array(
-                                'data' => date('Y-m-d', strtotime('+1 days')),
-                                'desconto_em_centavos' => 2000
-                            ),
-                            array(
-                                'data' => date('Y-m-d', strtotime('+3 days')),
-                                'desconto_em_centavos' => 1000
-                            ),
-                            array(
-                                'data' => date('Y-m-d', strtotime('+7 days')),
-                                'desconto_em_centavos' => 450
-                            )
-                        )
-                    )
-                );
+    $payload = array(
+        'documento_emissor' => '54349169000180',
+        'valor_em_centavos' => $total * 100,
+        'vencimento' => date('Y-m-d', strtotime('+7 days')),
+        'cliente' => array(
+            'documento' => $cpf,
+            'nome_cliente' => $order_data['billing']['first_name'] . ' ' . $order_data['billing']['last_name'],
+            'email' => $order_data['billing']['email'],
+            'celular' => $order_data['billing']['phone'],
+            'data_nascimento' => $birthdate,
+            'cep' => $customer_data['postcode'],
+            'uf' => $customer_data['state'],
+            'cidade' => $customer_data['city'],
+            'endereco' => $customer_data['address_1'],
+            'bairro' => $customer_data['address_2'],
+            'numero' => 'N/A',
+            'complemento' => ''
+        ),
+        'descricao' => 'Descrição da cobrança',
+        'reference_id' => $order->get_order_key(),
+        'url_logo' => 'https://zazpay.conectar.site/whitelabels/zaz/identidade_visual/logos/logo_principal.png',
+        'percentual_juros' => 2.00,
+        'percentual_multa' => 1.00,
+        'split' => array(
+            array(
+                'documento' => '17968083000100',
+                'valor_em_centavos' => 280
+            )
+        ),
+        'desconto' => array(
+            'tipo_desconto' => 'V',
+            'itens' => array(
+                array(
+                    'data' => date('Y-m-d', strtotime('+1 days')),
+                    'desconto_em_centavos' => 2000
+                ),
+                array(
+                    'data' => date('Y-m-d', strtotime('+3 days')),
+                    'desconto_em_centavos' => 1000
+                ),
+                array(
+                    'data' => date('Y-m-d', strtotime('+7 days')),
+                    'desconto_em_centavos' => 450
+                )
+            )
+        )
+    );
 
-                if ( $this->debug ) {
-                    $this->log( 'Generating boleto with payload: ' . json_encode( $payload ) );
-                }
+    if ( $this->debug ) {
+        $this->log( 'Generating boleto with payload: ' . json_encode( $payload ) );
+    }
 
-                $response = wp_remote_post( 'https://reverb.conectar.site/api/index.php/api/venda/boleto', array(
-                    'method'    => 'POST',
-                    'body'      => json_encode( $payload ),
-                    'headers'   => array(
-                        'Content-Type'  => 'application/json',
-                        'x-api-key'     => 'cee091f7a6b8635288e04854864f2bc92fb6a9b1',
-                        'identifier'    => 'P_REVERBCD83F091B792F268C42D415C73E9B079572F4683'
-                    ),
-                ));
+    $response = wp_remote_post( 'https://reverb.conectar.site/api/index.php/api/venda/boleto', array(
+        'method'    => 'POST',
+        'body'      => json_encode( $payload ),
+        'headers'   => array(
+            'Content-Type'  => 'application/json',
+            'x-api-key'     => 'cee091f7a6b8635288e04854864f2bc92fb6a9b1',
+            'identifier'    => 'P_REVERBCD83F091B792F268C42D415C73E9B079572F4683'
+        ),
+        'timeout'   => 30 // Aumentando o tempo limite para 30 segundos
+    ));
 
-                if ( is_wp_error( $response ) ) {
-                    if ( $this->debug ) {
-                        $this->log( 'Error generating boleto: ' . $response->get_error_message() );
-                    }
-                    return false;
-                }
+    if ( is_wp_error( $response ) ) {
+        if ( $this->debug ) {
+            $this->log( 'Error generating boleto: ' . $response->get_error_message() );
+        }
+        return false;
+    }
 
-                $body = wp_remote_retrieve_body( $response );
-                $decoded_body = json_decode( $body );
+    $body = wp_remote_retrieve_body( $response );
+    $decoded_body = json_decode( $body );
 
-                if ( $this->debug ) {
-                    $this->log( 'Boleto generation response: ' . json_encode( $decoded_body ) );
-                }
+    if ( $this->debug ) {
+        $this->log( 'Boleto generation response: ' . json_encode( $decoded_body ) );
+    }
 
-                return $decoded_body;
-            }
+    return $decoded_body;
+}
 
             private function log( $message ) {
                 if ( class_exists( 'WC_Logger' ) ) {
@@ -236,19 +237,19 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                 <fieldset id="endopay-cc-form" class="wc-credit-card-form wc-payment-form">
                     <div class="form-row form-row-wide">
                         <label for="endopay-cc-name"><?php _e( 'Cardholder Name', 'woocommerce' ); ?> <span class="required">*</span></label>
-                        <input id="endopay-cc-name" name="endopay_cc_name" type="text" autocomplete="cc-name" />
+                        <input id="endopay-cc-name" name="endopay_cc_name" type="text" autoComplete="cc-name" />
                     </div>
                     <div class="form-row form-row-wide">
                         <label for="endopay-cc-number"><?php _e( 'Card Number', 'woocommerce' ); ?> <span class="required">*</span></label>
-                        <input id="endopay-cc-number" name="endopay_cc_number" type="text" autocomplete="cc-number" />
+                        <input id="endopay-cc-number" name="endopay_cc_number" type="text" autoComplete="cc-number" />
                     </div>
                     <div class="form-row form-row-first">
                         <label for="endopay-cc-expiry"><?php _e( 'Expiry Date', 'woocommerce' ); ?> <span class="required">*</span></label>
-                        <input id="endopay-cc-expiry" name="endopay_cc_expiry" type="text" autocomplete="cc-exp" placeholder="MM / YY" />
+                        <input id="endopay-cc-expiry" name="endopay_cc_expiry" type="text" autoComplete="cc-exp" placeholder="MM / YY" />
                     </div>
                     <div class="form-row form-row-last">
                         <label for="endopay-cc-cvc"><?php _e( 'Card Code (CVC)', 'woocommerce' ); ?> <span class="required">*</span></label>
-                        <input id="endopay-cc-cvc" name="endopay_cc_cvc" type="text" autocomplete="cc-csc" />
+                        <input id="endopay-cc-cvc" name="endopay_cc_cvc" type="text" autoComplete="cc-csc" />
                     </div>
                     <div class="clear"></div>
                 </fieldset>
@@ -299,9 +300,135 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
             }
         }
 
+        class WC_Gateway_Endopay_PIX extends WC_Payment_Gateway {
+            public function __construct() {
+                $this->id = 'endopay_pix';
+                $this->method_title = __( 'Endopay PIX', 'woocommerce' );
+                $this->method_description = __( 'Custom payment gateway for PIX payments.', 'woocommerce' );
+                $this->has_fields = false;
+
+                $this->init_form_fields();
+                $this->init_settings();
+
+                $this->title = $this->get_option( 'title' );
+                $this->description = $this->get_option( 'description' );
+                $this->debug = $this->get_option( 'debug' );
+
+                add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
+                add_action( 'woocommerce_thankyou', array( $this, 'display_pix_qrcode' ), 10, 1 );
+                add_action( 'woocommerce_view_order', array( $this, 'display_pix_qrcode' ), 10, 1 );
+            }
+
+            public function init_form_fields() {
+                $this->form_fields = array(
+                    'enabled' => array(
+                        'title' => __( 'Enable/Disable', 'woocommerce' ),
+                        'type' => 'checkbox',
+                        'label' => __( 'Enable Endopay PIX Payment', 'woocommerce' ),
+                        'default' => 'yes'
+                    ),
+                    'title' => array(
+                        'title' => __( 'Title', 'woocommerce' ),
+                        'type' => 'text',
+                        'default' => __( 'PIX', 'woocommerce' )
+                    ),
+                    'description' => array(
+                        'title' => __( 'Description', 'woocommerce' ),
+                        'type' => 'textarea',
+                        'default' => __( 'Pay with PIX.', 'woocommerce' )
+                    ),
+                    'debug' => array(
+                        'title' => __( 'Debug Log', 'woocommerce' ),
+                        'type' => 'checkbox',
+                        'label' => __( 'Enable logging', 'woocommerce' ),
+                        'default' => 'no',
+                        'description' => __( 'Log events such as API requests', 'woocommerce' ),
+                    ),
+                );
+            }
+
+            public function process_payment( $order_id ) {
+                $order = wc_get_order( $order_id );
+
+                $response = $this->generate_pix_qrcode( $order );
+
+                if ( $response && isset( $response->qrcode ) ) {
+                    $order->update_status( 'on-hold', __( 'Awaiting PIX payment', 'woocommerce' ) );
+                    wc_reduce_stock_levels( $order_id );
+                    WC()->cart->empty_cart();
+
+                    // Store the PIX QR Code URL in order meta
+                    update_post_meta( $order_id, '_pix_qrcode', esc_url( $response->qrcode ) );
+
+                    return array(
+                        'result' => 'success',
+                        'redirect' => $this->get_return_url( $order )
+                    );
+                } else {
+                    wc_add_notice( 'Payment error: ' . $response->message, 'error' );
+                    return;
+                }
+            }
+
+            private function generate_pix_qrcode( $order ) {
+                $order_data = $order->get_data();
+                $total = $order->get_total();
+
+                $payload = json_encode(array(
+                    'documento' => '{{cnpj}}',
+                    'valor_em_centavos' => $total * 100,
+                    'external_reference_id' => $order->get_order_key()
+                ));
+
+                $response = wp_remote_post( 'https://reverb.conectar.site/api/index.php/api/DICT/gerarQRCodeDinamico', array(
+                    'method'    => 'POST',
+                    'body'      => $payload,
+                    'headers'   => array(
+                        'Content-Type'  => 'application/json',
+                        'x-api-key'     => 'solicitar ao contratante',
+                        'identifier'    => 'identifier gerado pela loja',
+                    ),
+                ));
+
+                if ( is_wp_error( $response ) ) {
+                    if ( $this->debug ) {
+                        $this->log( 'Error generating PIX QR Code: ' . $response->get_error_message() );
+                    }
+                    return false;
+                }
+
+                $body = wp_remote_retrieve_body( $response );
+                $decoded_body = json_decode( $body );
+
+                if ( $this->debug ) {
+                    $this->log( 'PIX QR Code generation response: ' . json_encode( $decoded_body ) );
+                }
+
+                return $decoded_body;
+            }
+
+            private function log( $message ) {
+                if ( class_exists( 'WC_Logger' ) ) {
+                    $logger = new WC_Logger();
+                    $logger->add( 'endopay_pix', $message );
+                }
+            }
+
+            public function display_pix_qrcode( $order_id ) {
+                $order = wc_get_order( $order_id );
+                $pix_qrcode = get_post_meta( $order_id, '_pix_qrcode', true );
+
+                if ( $order->get_payment_method() === 'endopay_pix' && $pix_qrcode ) {
+                    echo '<h2>' . __( 'Seu PIX', 'woocommerce' ) . '</h2>';
+                    echo '<img src="' . esc_url( $pix_qrcode ) . '" alt="PIX QR Code" />';
+                }
+            }
+        }
+
         function add_endopay_gateway( $methods ) {
             $methods[] = 'WC_Gateway_Endopay_Boleto';
             $methods[] = 'WC_Gateway_Endopay_Credit_Card';
+            $methods[] = 'WC_Gateway_Endopay_PIX';
             return $methods;
         }
 
